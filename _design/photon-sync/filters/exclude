@@ -1,1 +1,0 @@
-function (a,b) {var c=b.query||{},d=a._id;return!(c.xdel&&a._deleted||c.xddoc&&"_design/"==d.substr(0,8))}
