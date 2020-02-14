@@ -9,7 +9,7 @@ function (doc) {
 				return {
 					accountId: account.account_id,
 					nickname: account.nickname,
-					level: account.level.id,
+					level: account[raw.accounts.length > 3 ? "level" : "level3"].id,
 					score: raw.result.players.filter(function (x) {
 						return x.seat === account.seat;
 					})[0].part_point_1
