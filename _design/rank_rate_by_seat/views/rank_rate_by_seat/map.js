@@ -16,12 +16,6 @@ function (doc) {
 		return b.result.total_point - a.result.total_point;
 	});
   playerList.forEach(function(x, index) {
-		var data = {
-			rank: index + 1,
-			nickname: x.player.nickname,
-			level: [x.player.level.id, x.player.level.score, x.result.grading_score],
-			score: x.result.part_point_1
-		};
 		emit([0, index + 1, x.seat], 1);
 		emit([doc.config.meta.mode_id, index + 1, x.seat], 1);
 	});
