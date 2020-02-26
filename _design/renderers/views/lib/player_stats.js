@@ -7,7 +7,7 @@ exports.func = function(value) {
 		level: value.level && convert_level(value.level),
 		max_level: value.max_level && convert_level(value.max_level),
 	};
-	if (Math.floor(result.level.id / 10000) === 2) {
+	if (result.level && Math.floor(result.level.id / 10000) === 2) {
 		ranks = ranks.slice(0, 3);
 	}
 	result.rank_rates = ranks.map(function(x) {
