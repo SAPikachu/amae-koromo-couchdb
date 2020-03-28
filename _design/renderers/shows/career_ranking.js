@@ -1,13 +1,17 @@
 function(doc, req) {
-	var mapLevel = function(rawLevel) {
-		return {
-			id: rawLevel[0],
-			score: rawLevel[1],
-			delta: rawLevel[2],
-		};
-	};
+	var convertExtendedStats = require("views/lib/convert_extended_stats").func;
+	var playerStats = require("views/lib/player_stats").func;
+	var mapLevel = require("views/lib/convert_level").func;
 	var result = doc.data[req.query.mode || "0"] || [];
-	result.forEach(function(x) { x.level = mapLevel(x.level); });
+	result = result.map(function(x) {
+		var r = playerStats(x);
+		r.extended_stats = convertExtendedStats(x.extended);
+		r.count = x.count;
+		r.rank_key = x.rank_key;
+		r.id = x.id;
+		r.nickname = x.nickname;
+		return r;
+	});
   return {
     body : toJSON(result),
     headers : {
