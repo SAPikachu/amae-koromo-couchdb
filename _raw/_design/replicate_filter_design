@@ -1,0 +1,7 @@
+{
+  "_id": "_design/replicate_filter_design",
+  "_rev": "4-46a40c4ed79a6657f976e12c2224f3f5",
+  "filters": {
+    "replicate_filter_design": "function(doc, req) {\n  return (doc._id.indexOf(\"_design/\") === 0 && doc._id !== \"_design/default\" && doc._id !== \"_design/default_test\") || doc._id.indexOf(\"data\") === 0;\n}"
+  }
+}

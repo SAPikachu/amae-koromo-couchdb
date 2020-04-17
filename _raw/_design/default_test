@@ -1,0 +1,14 @@
+{
+  "_id": "_design/default_test",
+  "_rev": "2-09573fdd7afa1a902cf22bd84dfbf3eb",
+  "validate_doc_update": "function (newDoc, oldDoc, userCtx, secObj) {\r\r\n\tvar ddoc = this;\r\r\n\r\r\n\tsecObj.admins = secObj.admins || {};\r\r\n\tsecObj.admins.names = secObj.admins.names || [];\r\r\n\tsecObj.admins.roles = secObj.admins.roles || [];\r\r\n\r\r\n\tvar IS_DB_ADMIN = false;\r\r\n\tif (~userCtx.roles.indexOf('_admin')) IS_DB_ADMIN = true;\r\r\n\tif (~secObj.admins.names.indexOf(userCtx.name)) IS_DB_ADMIN = true;\r\r\n\tfor (var i = 0; i < userCtx.roles; i++)\r\r\n\tif (~secObj.admins.roles.indexOf(userCtx.roles[i])) IS_DB_ADMIN = true;\r\r\n\tif (!IS_DB_ADMIN) throw {\r\r\n\t\t'forbidden': 'This database is read-only'\r\r\n\t};\r\r\n\tif (newDoc) {\r\r\n\t    if (newDoc.uuid && !newDoc.data_version) {\r\r\n\t        throw {'bad_request': 'data_version is required'};\r\r\n\t    }\r\r\n\t}\r\r\n}",
+  "views": {
+    "valid_ids": {
+      "map": "function (doc) {\n  if (doc.uuid && doc.version >= 2) {\n\t  emit(doc.uuid, null);\n\t}\n}"
+    },
+    "by_time": {
+      "map": "function (doc) {\n\tvar transform = function (raw) {\n\t\treturn {\n\t\t\tmodeId: raw.config.meta.mode_id,\n\t\t\tuuid: raw.uuid,\n\t\t\tstartTime: raw.start_time,\n\t\t\tendTime: raw.end_time,\n\t\t\tplayers: raw.accounts.map(function (account) {\n\t\t\t\treturn {\n\t\t\t\t\taccountId: account.account_id,\n\t\t\t\t\tnickname: account.nickname,\n\t\t\t\t\tlevel: account[raw.accounts.length > 3 ? \"level\" : \"level3\"].id,\n\t\t\t\t\tscore: raw.result.players.filter(function (x) {\n\t\t\t\t\t\treturn x.seat === account.seat;\n\t\t\t\t\t})[0].part_point_1\n\t\t\t\t};\n\t\t\t})\n\t\t};\n\t};\n\tif (doc.uuid) {\n\t\tvar date = new Date(doc.start_time * 1000);\n\t\temit([date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), doc.start_time], transform(doc));\n\t}\n}",
+      "reduce": "function (keys, values, rereduce) {\n\tvar result = {};\n  if (rereduce) {\n\t\tresult.count = sum(values.map(function(x) { return x.count || 0; }));\n\t\t// result.last_time = values.map(function(x) { return x.last_time; }).reduce(function(a, b) { return a > b ? a : b; }, 0);\n  } else {\n\t\tresult.count = values.length || 0;\n\t\t// result.last_time = keys.map(function(x) { return x[0][4]; }).reduce(function(a, b) { return a > b ? a : b; }, 0);\n  }\n  return result;\n}"
+    }
+  }
+}

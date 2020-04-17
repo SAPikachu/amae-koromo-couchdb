@@ -1,0 +1,10 @@
+{
+  "_id": "_design/nicknames_test",
+  "_rev": "1-028757b0694d7376bfe6dd67f3832b18",
+  "views": {
+    "nicknames": {
+      "map": "function (doc) {\n  if (!doc.uuid) {\n    return;\n  }\n  var players = {};\n  doc.accounts.forEach(function (x) {\n\t\tplayers[x.seat] = { player: x };\n\t});\n  doc.result.players.forEach(function (x) {\n\t\tplayers[x.seat].result = x;\n\t});\n  var playerList = Object.keys(players).map(function(x) {\n\t\treturn players[x];\n\t});\n  playerList.forEach(function(x, index) {\n\t\tvar normalizedName = x.player.nickname.toLowerCase().replace(/(^\\s+|\\s+$)/g, \"\");\n\t\tif (normalizedName) {\n\t\t\tvar level = x.player[playerList.length > 3 ? \"level\" : \"level3\"];\n\t\t\temit([normalizedName, x.player.account_id, doc.start_time], {\n\t\t\t\tnickname: x.player.nickname,\n\t\t\t\tlevel: [level.id, level.score, x.result.grading_score]\n\t\t\t});\n\t\t}\n\t});\n}",
+      "reduce": "function (keys, values, rereduce) {\n\tvar result = { nickname: \"\", level: undefined, latest_timestamp: 0, count: 0 };\n  if (rereduce) {\n    values.forEach(function(x) {\n\t\t\tif (x.latest_timestamp > result.latest_timestamp) {\n\t\t\t\tresult.latest_timestamp = x.latest_timestamp;\n\t\t\t\tresult.nickname = x.nickname;\n\t\t\t\tresult.level = x.level;\n\t\t\t  result.id = x.id;\n\t\t\t}\n\t\t\tresult.count += x.count;\n    });\n  } else {\n    values.forEach(function(x, index) {\n\t\t\tvar ts = keys[index][0][2];\n\t\t\tif (ts > result.latest_timestamp) {\n\t\t\t\tresult.latest_timestamp = ts;\n\t\t\t\tresult.nickname = x.nickname;\n\t\t\t\tresult.level = x.level;\n\t\t\t  result.id = keys[index][0][1];\n\t\t\t}\n\t\t\tresult.count += 1;\n    });\n  }\n  return result;\n}"
+    }
+  }
+}
