@@ -1,7 +1,6 @@
 function(req2) {
   "use strict";
   var prefix = req2.path[4];
-  /*
   if (prefix !== "api-test") {
   	return {
   		code: 200,
@@ -10,10 +9,10 @@ function(req2) {
   			"Content-Type": "application/json; charset=utf-8"
   		},
   		body: toJSON({
-  			maintenance: "因数据库出现问题，临时维护两小时左右"
+  			maintenance: "因数据库出现问题，临时维护中，可能要数日时间恢复 / ただいまメンテナンス中、復旧まで数日が必要かもしれません。"
   		})
   	};
-  }*/
+  }
   var basename = req2.path[0];
   var method = req2.path[5];
   var params = req2.path.slice(6);
