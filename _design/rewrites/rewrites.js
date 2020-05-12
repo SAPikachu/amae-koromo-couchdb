@@ -9,7 +9,7 @@ function(req2) {
 				"Content-Type": "application/json; charset=utf-8"
 			},
 			body: toJSON({
-				maintenance: "因数据库出现问题，临时维护中，目前预计本周内恢复 / ただいまメンテナンス中、本週に復旧できる見込みです。"
+				maintenance: "因数据库出现问题，临时维护中，目前预计13或14日恢复 / ただいまメンテナンス中、13日または14日に復旧できる見込みです。"
 			})
 		};
 	}
