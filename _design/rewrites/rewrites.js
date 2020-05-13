@@ -9,7 +9,7 @@ function(req2) {
 				"Content-Type": "application/json; charset=utf-8"
 			},
 			body: toJSON({
-				maintenance: "因数据库出现问题，临时维护中，目前预计13或14日恢复 / ただいまメンテナンス中、13日または14日に復旧できる見込みです。"
+				maintenance: "因数据库出现问题，临时维护中，目前预计14日恢复 / ただいまメンテナンス中、14日に復旧できる見込みです。"
 			})
 		};
 	}
@@ -259,7 +259,7 @@ function(req2) {
 						"endkey": toJSON(dateToKey(endTs)),
 						"maxage": cacheMaxAge.toString(),
 						"stable": "false",
-						"update": "lazy"
+						"update": "lazy",
 						"default": '{"count":0}'
 					}
 				};
