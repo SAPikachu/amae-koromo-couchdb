@@ -1,6 +1,7 @@
 function(req2) {
 	"use strict";
 	var prefix = req2.path[4];
+	/*
 	if (prefix !== "api-test") {
 		return {
 			code: 200,
@@ -12,7 +13,7 @@ function(req2) {
 				maintenance: "因数据库出现问题，临时维护中，目前预计14日恢复 / ただいまメンテナンス中、14日に復旧できる見込みです。"
 			})
 		};
-	}
+	}*/
 	var basename = req2.path[0];
 	var method = req2.path[5];
 	var params = req2.path.slice(6);
