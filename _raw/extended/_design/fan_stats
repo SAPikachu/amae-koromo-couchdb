@@ -1,6 +1,6 @@
 {
   "_id": "_design/fan_stats",
-  "_rev": "3-49b419d0f94e956804a538a84f5064f6",
+  "_rev": "1-a1e93fc40e3a0a1b552cbf96a05b8d92",
   "views": {
     "fan_stats": {
       "map": "function (doc) {\n\t\"use strict\";\n  if (doc.type !== \"roundData\") {\n    return;\n  }\n  doc.accounts.forEach(function(accountId, seat) {\n\t\tdoc.data.forEach(function(round, index) {\n\t\t\tvar player = round[seat];\n\t\t\tif (player.和) {\n\t\t\t\temit([0, -127, doc.start_time], 1);\n\t\t\t\temit([doc.mode_id, -127, doc.start_time], 1);\n\t\t\t\t\n\t\t\t\tvar emitted = {};\n\t\t\t\tplayer.和[1].forEach(function(x) {\n\t\t\t\t\tif (emitted[x]) {\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\temitted[x] = true;\n\t\t\t\t\temit([0, x, doc.start_time], 1);\n\t\t\t\t\temit([doc.mode_id, x, doc.start_time], 1);\n\t\t\t\t});\n\t\t\t}\n\t\t});\n\t});\n}",

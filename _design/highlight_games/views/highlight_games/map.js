@@ -51,7 +51,6 @@ function (doc) {
 		return;
 	}
 	var data = {
-		_id: doc.game._id,
 		mode_id: doc.mode_id,
 		events: events,
 	};

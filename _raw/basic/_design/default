@@ -1,7 +1,6 @@
 {
-  "_id": "_design/default_test",
-  "_rev": "2-09573fdd7afa1a902cf22bd84dfbf3eb",
-  "validate_doc_update": "function (newDoc, oldDoc, userCtx, secObj) {\r\r\n\tvar ddoc = this;\r\r\n\r\r\n\tsecObj.admins = secObj.admins || {};\r\r\n\tsecObj.admins.names = secObj.admins.names || [];\r\r\n\tsecObj.admins.roles = secObj.admins.roles || [];\r\r\n\r\r\n\tvar IS_DB_ADMIN = false;\r\r\n\tif (~userCtx.roles.indexOf('_admin')) IS_DB_ADMIN = true;\r\r\n\tif (~secObj.admins.names.indexOf(userCtx.name)) IS_DB_ADMIN = true;\r\r\n\tfor (var i = 0; i < userCtx.roles; i++)\r\r\n\tif (~secObj.admins.roles.indexOf(userCtx.roles[i])) IS_DB_ADMIN = true;\r\r\n\tif (!IS_DB_ADMIN) throw {\r\r\n\t\t'forbidden': 'This database is read-only'\r\r\n\t};\r\r\n\tif (newDoc) {\r\r\n\t    if (newDoc.uuid && !newDoc.data_version) {\r\r\n\t        throw {'bad_request': 'data_version is required'};\r\r\n\t    }\r\r\n\t}\r\r\n}",
+  "_id": "_design/default",
+  "_rev": "80-295d0cd0d7307b8605b2a36b621dd677",
   "views": {
     "valid_ids": {
       "map": "function (doc) {\n  if (doc.uuid && doc.version >= 2) {\n\t  emit(doc.uuid, null);\n\t}\n}"

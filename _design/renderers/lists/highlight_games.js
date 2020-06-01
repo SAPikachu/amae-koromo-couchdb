@@ -5,10 +5,11 @@ function (head, req) {
 	var buildFans = require("views/lib/build_fans");
 	return r.reduce_rows(req, function(row, state) {
 		row.value.events.forEach(function(event) {
-			var result = transform_game(row.doc);
+			var result = {};
 			if (event.type === "役满") {
 				event.fan = buildFans(event.fan);
 			}
+			result._id = row.id.replace("r-", "");
 			result.event = event;
 			state.push(result);
 		});

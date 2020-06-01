@@ -1,6 +1,6 @@
 {
-  "_id": "_design/have_valid_round_data_test",
-  "_rev": "2-1ff4f2da6def64e05aa3f873808d5815",
+  "_id": "_design/have_valid_round_data",
+  "_rev": "1-3d40a2c042e633a6630e3dc7ab546a2b",
   "views": {
     "have_valid_round_data": {
       "map": "function (doc) {\n  if (doc.type === \"roundData\" && doc.version >= 6) {\n\t  emit(doc.game._id, null);\n\t}\n}"

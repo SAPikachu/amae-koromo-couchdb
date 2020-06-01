@@ -67,7 +67,7 @@ function(req2) {
 	switch (method) {
 		case "recent_highlight_games":
 			return {
-				path: "/../renderers/_list/highlight_games/highlight_games/highlight_games",
+				path: "/../../../" + basename.replace("_basic", "_extended") + "/_design/renderers/_list/highlight_games/highlight_games/highlight_games",
 				query: {
 					"limit": req2.query.limit || "100",
 					"skip": req2.query.skip || "0",
@@ -82,7 +82,7 @@ function(req2) {
 			break;
 		case "fan_stats":
 			return {
-				path: "/../renderers/_list/fan_stats/fan_stats/fan_stats",
+				path: "/../../../" + basename.replace("_basic", "_extended") + "/_design/renderers/_list/fan_stats/fan_stats/fan_stats",
 				query: ({
 					"group_level": "2",
 					"maxage": "3600",
@@ -96,7 +96,7 @@ function(req2) {
 				query: {
 					maxage: "3600",
 				},
-				path: "/../../../" + basename + "_aggregates/_design/renderers/_show/global_statistics/global_statistics",
+				path: "/../../../" + basename.replace("_basic", "_aggregates") + "/_design/renderers/_show/global_statistics/global_statistics",
 			};
 			break;
 		case "career_ranking":
@@ -110,7 +110,7 @@ function(req2) {
 				};
 			}
 			return {
-				path: "/../../../" + basename + "_aggregates/_design/renderers/_show/career_ranking/career_ranking_" + type,
+				path: "/../../../" + basename.replace("_basic", "_aggregates") + "/_design/renderers/_show/career_ranking/career_ranking_" + type,
 				query: {
 					mode: req2.query.mode || ""
 				}
@@ -138,7 +138,7 @@ function(req2) {
 				};
 			}
 			return {
-				path: "/../../../" + basename + "_aggregates/_design/renderers/_show/generic_data/player_delta_ranking_" + range
+				path: "/../../../" + basename.replace("_basic", "_aggregates") + "/_design/renderers/_show/generic_data/player_delta_ranking_" + range
 			};
 			break;
 		case "search_player":
@@ -210,7 +210,7 @@ function(req2) {
 			}
 			if (method === "player_extended_stats") {
 				return {
-					path: "/../renderers/_list/player_extended_stats/player_extended_stats/player_stats",
+					path: "/../../../" + basename.replace("_basic", "_extended") + "/_design/renderers/_list/player_extended_stats/player_extended_stats/player_stats",
 					query: ({
 						"group_level": key.length.toString(),
 						"startkey": toJSON(key.concat([dateToSecKey(startDate)])),
@@ -229,6 +229,28 @@ function(req2) {
 					"stable": "false",
 					"update": "lazy"
 				})
+			};
+			break;
+		case "games_by_id":
+			var ids = params[0];
+			if (!ids) {
+				return {
+					code: 400,
+					body: toJSON({
+						error: "invalid_ids"
+					})
+				};
+			}
+			return {
+				path: "/../renderers/_list/result_from_doc/_all_docs",
+				query: {
+					"keys": toJSON(ids.split(",")),
+					"maxage": (cacheMaxAge * 360).toString(),
+					"include_docs": "true",
+					"reduce": "false",
+					"stable": "false",
+					"update": "lazy"
+				}
 			};
 			break;
 		case "games":

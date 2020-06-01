@@ -1,9 +1,0 @@
-{
-  "_id": "_design/pending_migration",
-  "_rev": "5-53ff326421c0ec3a13aa1e40375d5d37",
-  "views": {
-    "pending_migration": {
-      "map": "function (doc) {\n  if (doc.type === \"roundData\" && doc.version < 6) {\n    emit(doc._id, { game: doc.game });\n\t}\n}"
-    }
-  }
-}
