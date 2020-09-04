@@ -1,6 +1,7 @@
 exports.func = function func(value) {
 	var buildFans = require("views/lib/build_fans");
 	var result = {
+		count: value.count,
 		和牌率: value.和 / value.count,
 		自摸率: value.自摸 / value.和,
 		默听率: value.默听 / value.和,
