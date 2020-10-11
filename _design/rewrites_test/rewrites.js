@@ -10,7 +10,7 @@ function(req2) {
 				"Content-Type": "application/json; charset=utf-8"
 			},
 			body: toJSON({
-				maintenance: "因数据库出现问题，临时维护两小时左右"
+				maintenance: "因数据库出现问题，临时维护中，目前预计14日恢复 / ただいまメンテナンス中、14日に復旧できる見込みです。"
 			})
 		};
 	}*/
@@ -20,11 +20,13 @@ function(req2) {
 	if (!method) {
 		return {
 			code: 400,
-			body: toJSON({error: "bad_request"})
+			body: toJSON({
+				error: "bad_request"
+			})
 		};
 	}
 	var MS_PER_DAY = 1000 * 60 * 60 * 24;
-	var parseTs = function (val) {
+	var parseTs = function(val) {
 		"use strict";
 		var result;
 		try {
@@ -53,32 +55,48 @@ function(req2) {
 		}
 		return result;
 	};
-	var dateToKey = function (date) {
+	var dateToKey = function(date) {
 		return [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours()];
 	};
-	var dateToSecKey = function (date) {
+	var dateToSecKey = function(date) {
 		return date.getTime() / 1000;
 	};
 	if (req2.query.limit && parseInt(req2.query.limit) > 500) {
 		req2.query.limit = "500";
 	}
 	switch (method) {
+		case "recent_highlight_games":
+			return {
+				path: "/../../../" + basename.replace("_basic", "_extended") + "/_design/renderers/_list/highlight_games/highlight_games/highlight_games",
+				query: {
+					"limit": req2.query.limit || "100",
+					"skip": req2.query.skip || "0",
+					"include_docs": "true",
+					"maxage": "300",
+					"reduce": "false",
+					"descending": "true",
+					"stable": "false",
+					"update": "lazy"
+				}
+			};
+			break;
 		case "fan_stats":
 			return {
-				path: "/../renderers/_list/fan_stats/fan_stats/fan_stats",
+				path: "/../../../" + basename.replace("_basic", "_extended") + "/_design/renderers/_list/fan_stats/fan_stats/fan_stats",
 				query: ({
 					"group_level": "2",
-				  "maxage": "3600",
-					"stale": "update_after",
+					"maxage": "3600",
+					"stable": "false",
+					"update": "lazy"
 				})
 			};
 			break;
 		case "global_statistics":
 			return {
 				query: {
-				  maxage: "3600",
+					maxage: "3600",
 				},
-				path: "/../../../" + basename + "_aggregates/_design/renderers/_show/global_statistics/global_statistics",
+				path: "/../../../" + basename.replace("_basic", "_aggregates") + "/_design/renderers/_show/global_statistics/global_statistics",
 			};
 			break;
 		case "career_ranking":
@@ -86,11 +104,13 @@ function(req2) {
 			if (!type) {
 				return {
 					code: 400,
-					body: toJSON({error: "no_param"})
+					body: toJSON({
+						error: "no_param"
+					})
 				};
 			}
 			return {
-				path: "/../../../" + basename + "_aggregates/_design/renderers/_show/career_ranking/career_ranking_" + type,
+				path: "/../../../" + basename.replace("_basic", "_aggregates") + "/_design/renderers/_show/career_ranking/career_ranking_" + type,
 				query: {
 					mode: req2.query.mode || ""
 				}
@@ -99,8 +119,10 @@ function(req2) {
 		case "rank_rate_by_seat":
 			return {
 				query: {
-				  maxage: "3600",
-					group: "true"
+					maxage: "3600",
+					group: "true",
+					"stable": "false",
+					"update": "lazy"
 				},
 				path: "/../renderers/_list/rank_rate_by_seat/rank_rate_by_seat/rank_rate_by_seat"
 			};
@@ -110,11 +132,13 @@ function(req2) {
 			if (range !== "1w" && range !== "4w") {
 				return {
 					code: 400,
-					body: toJSON({error: "invalid_param"})
+					body: toJSON({
+						error: "invalid_param"
+					})
 				};
 			}
 			return {
-				path: "/../../../" + basename + "_aggregates/_design/renderers/_show/generic_data/player_delta_ranking_" + range
+				path: "/../../../" + basename.replace("_basic", "_aggregates") + "/_design/renderers/_show/generic_data/player_delta_ranking_" + range
 			};
 			break;
 		case "search_player":
@@ -122,7 +146,9 @@ function(req2) {
 			if (!prefix) {
 				return {
 					code: 400,
-					body: toJSON({error: "no_param"})
+					body: toJSON({
+						error: "no_param"
+					})
 				};
 			}
 			return {
@@ -132,7 +158,8 @@ function(req2) {
 					"startkey": toJSON([prefix]),
 					"endkey": toJSON([prefix + "\uffff"]),
 					"group_level": "2",
-					"stale": "update_after"
+					"stable": "false",
+					"update": "lazy"
 				}
 			};
 			break;
@@ -143,7 +170,9 @@ function(req2) {
 			if (!id) {
 				return {
 					code: 400,
-					body: toJSON({error: "invalid_id"})
+					body: toJSON({
+						error: "invalid_id"
+					})
 				};
 			}
 			var startDate = parseTs(params[1] || "0");
@@ -155,7 +184,9 @@ function(req2) {
 				if (!modeId) {
 					return {
 						code: 400,
-						body: toJSON({error: "invalid_mode_id"})
+						body: toJSON({
+							error: "invalid_mode_id"
+						})
 					};
 				}
 				key.push(modeId);
@@ -172,18 +203,21 @@ function(req2) {
 						"include_docs": "true",
 						"startkey": toJSON(key.concat([dateToSecKey(startDate)])),
 						"endkey": toJSON(key.concat([endDate ? dateToSecKey(endDate) : {}])),
-						"stale": "update_after"
+						"descending": (req2.query.descending || "false").toString(),
+						"stable": "false",
+						"update": "lazy"
 					}
 				};
 			}
 			if (method === "player_extended_stats") {
 				return {
-					path: "/../renderers/_list/player_extended_stats/player_extended_stats/player_stats",
+					path: "/../../../" + basename.replace("_basic", "_extended") + "/_design/renderers/_list/player_extended_stats/player_extended_stats/player_stats",
 					query: ({
 						"group_level": key.length.toString(),
 						"startkey": toJSON(key.concat([dateToSecKey(startDate)])),
 						"endkey": toJSON(key.concat([endDate ? dateToSecKey(endDate) : {}])),
-						"stale": "update_after"
+						"stable": "false",
+						"update": "lazy"
 					})
 				};
 			}
@@ -193,8 +227,31 @@ function(req2) {
 					"group_level": key.length.toString(),
 					"startkey": toJSON(key.concat([dateToSecKey(startDate)])),
 					"endkey": toJSON(key.concat([endDate ? dateToSecKey(endDate) : {}])),
-					"stale": "update_after"
+					"stable": "false",
+					"update": "lazy"
 				})
+			};
+			break;
+		case "games_by_id":
+			var ids = params[0];
+			if (!ids) {
+				return {
+					code: 400,
+					body: toJSON({
+						error: "invalid_ids"
+					})
+				};
+			}
+			return {
+				path: "/../renderers/_list/result_from_doc/_all_docs",
+				query: {
+					"keys": toJSON(ids.split(",")),
+					"maxage": (cacheMaxAge * 360).toString(),
+					"include_docs": "true",
+					"reduce": "false",
+					"stable": "false",
+					"update": "lazy"
+				}
 			};
 			break;
 		case "games":
@@ -203,14 +260,18 @@ function(req2) {
 			if (!startTs) {
 				return {
 					code: 400,
-					body: toJSON({error: "invalid_start_time"})
+					body: toJSON({
+						error: "invalid_start_time"
+					})
 				};
 			}
 			var endTs = params[1] ? parseTs(params[1]) : new Date(startTs.getTime() + MS_PER_DAY);
 			if (!endTs) {
 				return {
 					code: 400,
-					body: toJSON({error: "invalid_end_time"})
+					body: toJSON({
+						error: "invalid_end_time"
+					})
 				};
 			}
 			var cacheMaxAge = (endTs.getTime() < (new Date()).getTime() - MS_PER_DAY / 2) ? 86400 : 60;
@@ -221,26 +282,33 @@ function(req2) {
 						"startkey": toJSON(dateToKey(startTs)),
 						"endkey": toJSON(dateToKey(endTs)),
 						"maxage": cacheMaxAge.toString(),
-						"stale": "update_after"
+						"stable": "false",
+						"update": "lazy",
+						"default": '{"count":0}'
 					}
 				};
 			}
 			return {
-				path: "/../renderers/_list/result/default/by_time",
+				// path: "/../renderers/_list/result/default/by_time",
+				path: "/..//default/_view/by_time",
 				query: {
 					"limit": req2.query.limit || "100",
 					"skip": req2.query.skip || "0",
 					"startkey": toJSON(dateToKey(startTs)),
 					"endkey": toJSON(dateToKey(endTs)),
 					"maxage": (cacheMaxAge * 15).toString(),
+					"descending": req2.query.descending ? "true" : "false",
 					"reduce": "false",
-					"stale": "update_after"
+					"stable": "false",
+					"update": "lazy"
 				}
 			};
 			break;
 	}
 	return {
 		code: 404,
-		body: toJSON({error: "unknown_method"})
+		body: toJSON({
+			error: "unknown_method"
+		})
 	};
 }

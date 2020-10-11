@@ -58,6 +58,9 @@ function(req2) {
 	var dateToKey = function(date) {
 		return [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours()];
 	};
+	var dateToKey2 = function(date) {
+		return [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), date.getTime() / 1000];
+	};
 	var dateToSecKey = function(date) {
 		return date.getTime() / 1000;
 	};
@@ -203,6 +206,7 @@ function(req2) {
 						"include_docs": "true",
 						"startkey": toJSON(key.concat([dateToSecKey(startDate)])),
 						"endkey": toJSON(key.concat([endDate ? dateToSecKey(endDate) : {}])),
+						"descending": req2.query.descending ? "true" : "false",
 						"stable": "false",
 						"update": "lazy"
 					}
@@ -292,9 +296,10 @@ function(req2) {
 				query: {
 					"limit": req2.query.limit || "100",
 					"skip": req2.query.skip || "0",
-					"startkey": toJSON(dateToKey(startTs)),
-					"endkey": toJSON(dateToKey(endTs)),
+					"startkey": toJSON(dateToKey2(startTs)),
+					"endkey": toJSON(dateToKey2(endTs)),
 					"maxage": (cacheMaxAge * 15).toString(),
+					"descending": req2.query.descending ? "true" : "false",
 					"reduce": "false",
 					"stable": "false",
 					"update": "lazy"
