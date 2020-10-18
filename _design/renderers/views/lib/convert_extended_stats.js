@@ -33,7 +33,7 @@ exports.func = function func(value) {
 		副露和了: value.副露和了,
 		默听和了: value.默听,
 		立直巡目: value.立直巡目 / value.立直,
-		立直收支: Math.round((value.立直收入 - value.立直支出 + value.立直流局收支 + value.立直其它收支) * 100 / value.立直),
+		立直收支: Math.round(((value.立直收入 || 0) - (value.立直支出 || 0) + (value.立直流局收支 || 0) + (value.立直其它收支 || 0)) * 100 / value.立直),
 		立直收入: Math.round(value.立直收入 * 100 / value.立直和了),
 		立直支出: Math.round(value.立直支出 * 100 / value.放铳时立直),
 		先制率: value.先制立直 / value.立直,
