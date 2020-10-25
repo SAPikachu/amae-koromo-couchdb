@@ -1,0 +1,9 @@
+{
+  "_id": "_design/updated_players",
+  "_rev": "1-55f4a649c8d4a9c2b27ce75b3e0fe178",
+  "views": {
+    "updated_players": {
+      "map": "function (doc) {\n  if (!doc.updated || (!doc.uuid && doc.type !== \"roundData\")) {\n    return;\n  }\n\tif (doc.type === \"roundData\") {\n\t\temit(doc.updated, { accounts: doc.accounts, mode_id: doc.mode_id});\n\t\treturn;\n\t}\n\temit(doc.updated, { accounts: doc.accounts.map(function(x) { return x.account_id; }), mode_id: doc.config.meta.mode_id });\n}"
+    }
+  }
+}

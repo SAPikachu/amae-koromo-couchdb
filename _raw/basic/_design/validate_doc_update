@@ -1,5 +1,0 @@
-{
-  "_id": "_design/validate_doc_update",
-  "_rev": "5-ddafc51d6a53d4a7bfe39cf51885eea0",
-  "validate_doc_update": "function (newDoc, oldDoc, userCtx, secObj) {\n\tvar ddoc = this;\n\n\tsecObj.admins = secObj.admins || {};\n\tsecObj.admins.names = secObj.admins.names || [];\n\tsecObj.admins.roles = secObj.admins.roles || [];\n\n\tvar IS_DB_ADMIN = false;\n\n\tif (~userCtx.roles.indexOf('_admin')) IS_DB_ADMIN = true;\n\tif (~secObj.admins.names.indexOf(userCtx.name)) IS_DB_ADMIN = true;\n\tfor (var i = 0; i < userCtx.roles; i++)\n\t  if (~secObj.admins.roles.indexOf(userCtx.roles[i])) IS_DB_ADMIN = true;\n\n\tif (!IS_DB_ADMIN) throw {\n\t\t'forbidden': 'This database is read-only'\n\t};\n\n\tif (newDoc && newDoc.uuid) {\n\t\tif (!newDoc.data_version) {\n\t\t\tthrow {'forbidden': 'data_version is required'};\n\t\t}\n\t\tif ([12, 16].indexOf(newDoc.config.meta.mode_id) === -1) {\n\t\t\tthrow {'forbidden': 'unaccepted mode id'};\n\t\t}\n\t\t// Test\n\t}\n}"
-}
