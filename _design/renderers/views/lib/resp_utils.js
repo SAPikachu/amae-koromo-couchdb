@@ -9,7 +9,7 @@ module.exports = {
 		return {
 			code: code,
 			headers: {
-				"Cache-Control": "public, max-age=" + maxage,
+				"Cache-Control": "public, max-age=" + maxage + ", stale-while-revalidate=" + maxage + ", stale-if-error=" + maxage,
 				"Vary": "Origin",
       	"Content-Type" : "application/json; charset=utf-8",
 			}
