@@ -21,6 +21,7 @@ exports.func = function func(value) {
 		放铳时立直率: value.放铳时立直 / value.放铳,
 		放铳时副露率: value.放铳时副露 / value.放铳,
 		立直后放铳率: value.放铳时立直 / value.立直,
+		立直后非瞬间放铳率: (value.放铳时立直 - (value.立直瞬间放铳 || 0)) / value.立直,
 		副露后放铳率: value.放铳时副露 / value.副露,
 		立直后和牌率: value.立直和了 / value.立直,
 		副露后和牌率: value.副露和了 / value.副露,
