@@ -1,0 +1,10 @@
+{
+  "_id": "_design/fan_stats_2",
+  "_rev": "1-6159d6ef09ef61a05be61e3ac54c2dfa",
+  "views": {
+    "fan_stats": {
+      "map": "function (doc) {\n\t\"use strict\";\n  if (doc.type !== \"roundData\") {\n    return;\n  }\n\tvar result = {};\n\tfunction inc(id) {\n\t\tif (!result[id]) {\n\t\t\tresult[id] = 0;\n\t\t}\n\t\tresult[id]++;\n\t}\n  doc.accounts.forEach(function(accountId, seat) {\n\t\tdoc.data.forEach(function(round, index) {\n\t\t\tvar player = round[seat];\n\t\t\tif (player.和) {\n\t\t\t\tinc(-127);\n\t\t\t\t\n\t\t\t\tvar emitted = {};\n\t\t\t\tplayer.和[1].forEach(function(x) {\n\t\t\t\t\tif (emitted[x]) {\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\temitted[x] = true;\n\t\t\t\t\tinc(x);\n\t\t\t\t});\n\t\t\t}\n\t\t});\n\t});\n\tObject.keys(result).forEach(function(key) {\n\t\temit([doc.mode_id, parseInt(key, 10)], result[key]);\n\t});\n}",
+      "reduce": "_sum"
+    }
+  }
+}
