@@ -35,7 +35,7 @@ module.exports = {
 	reduce_rows: function(req, reducer, final_reducer, initial, validate_key) {
 		var row = getRow();
 		if (!row) {
-			return r.error({error: "no_row_returned"}, 3600, 404);
+			return this.error({error: "no_row_returned"}, 3600, 404);
 		}
 		if (validate_key) {
 			var e = validate_key(row.key);

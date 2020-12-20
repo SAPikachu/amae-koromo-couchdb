@@ -17,14 +17,23 @@ function (head, req) {
 		}
 		return state;
 	}, function(state) {
+		const allTypes = {};
+		Object.keys(state).forEach(function(mode) {
+			if (!state[mode].entries) {
+				return;
+			}
+			Object.keys(state[mode].entries).forEach(function(id) {
+				allTypes[id] = state[mode].entries[id];
+			});
+		});
 		Object.keys(state).forEach(function(mode) {
 			if (mode.toString() !== "0") {
-				Object.keys(state[0].entries).forEach(function(id) {
+				Object.keys(allTypes).forEach(function(id) {
 					if (!state[mode].entries[id]) {
 						state[mode].entries[id] = {
 							count: 0,
-							label: state[0].entries[id].label,
-							sort: state[0].entries[id].sort,
+							label: allTypes[id].label,
+							sort: allTypes[id].sort,
 						};
 					}
 				});
