@@ -185,7 +185,9 @@ function (doc) {
 				最大连庄 = 0;
 			}
 		});
-		emit([accountId, 0, doc.start_time], data);
+		if (doc.mode_id !== 0) {
+			emit([accountId, 0, doc.start_time], data);
+		}
 		emit([accountId, doc.mode_id, doc.start_time], data);
 	});
 }
