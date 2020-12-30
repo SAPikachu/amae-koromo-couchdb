@@ -54,5 +54,5 @@ function (doc) {
 		mode_id: doc.mode_id,
 		events: events,
 	};
-	emit([doc.start_time], data);
+	emit([doc.mode_id, doc.start_time], data);
 }

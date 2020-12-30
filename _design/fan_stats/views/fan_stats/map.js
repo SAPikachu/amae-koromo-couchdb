@@ -3,12 +3,18 @@ function (doc) {
   if (doc.type !== "roundData") {
     return;
   }
+	var result = {};
+	function inc(id) {
+		if (!result[id]) {
+			result[id] = 0;
+		}
+		result[id]++;
+	}
   doc.accounts.forEach(function(accountId, seat) {
 		doc.data.forEach(function(round, index) {
 			var player = round[seat];
 			if (player.和) {
-				emit([0, -127, doc.start_time], 1);
-				emit([doc.mode_id, -127, doc.start_time], 1);
+				inc(-127);
 				
 				var emitted = {};
 				player.和[1].forEach(function(x) {
@@ -16,10 +22,12 @@ function (doc) {
 						return;
 					}
 					emitted[x] = true;
-					emit([0, x, doc.start_time], 1);
-					emit([doc.mode_id, x, doc.start_time], 1);
+					inc(x);
 				});
 			}
 		});
+	});
+	Object.keys(result).forEach(function(key) {
+		emit([doc.mode_id, parseInt(key, 10)], result[key]);
 	});
 }
