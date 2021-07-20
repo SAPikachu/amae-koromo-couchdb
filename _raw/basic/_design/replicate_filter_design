@@ -1,7 +1,0 @@
-{
-  "_id": "_design/replicate_filter_design",
-  "_rev": "6-6a5588cb4ef4b5ecf25720f97ae11d6a",
-  "filters": {
-    "replicate_filter_design": "function(doc, req) {\n  return (doc._id.indexOf(\"_design/\") === 0 && doc._id !== \"_design/validate_doc_update\") || doc._id.indexOf(\"data\") === 0;\n}"
-  }
-}
