@@ -1,0 +1,7 @@
+{
+  "_id": "_design/replicate_filter_design_slim",
+  "_rev": "3-70700f2adc2a41d0a49dd5e06694ec84",
+  "filters": {
+    "replicate_filter_design": "function(doc, req) {\n  return (doc._id.indexOf(\"_design/\") === 0 && doc._id !== \"_design/validate_doc_update\" && doc._id !== \"_design/player_stats_2\" && doc._id !== \"_design/updated_players\" && doc._id !== \"_design/player_extended_stats\" && doc._id !== \"_design/default\" && doc._id !== \"_design/nicknames\") || doc._id.indexOf(\"data\") === 0;\n}"
+  }
+}

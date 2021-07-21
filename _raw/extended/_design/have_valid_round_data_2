@@ -1,0 +1,46 @@
+{
+  "_id": "_design/have_valid_round_data_2",
+  "_rev": "1-ad55035fe0746f56bf17c96b86038d3c",
+  "language": "query",
+  "views": {
+    "have_valid_round_data_2": {
+      "map": {
+        "fields": {
+          "game._id": "asc"
+        },
+        "partial_filter_selector": {
+          "$and": [
+            {
+              "version": {
+                "$gte": 6
+              }
+            },
+            {
+              "type": {
+                "$eq": "roundData"
+              }
+            }
+          ]
+        }
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            {
+              "game._id": "asc"
+            }
+          ],
+          "partial_filter_selector": {
+            "version": {
+              "$gte": 6
+            },
+            "type": {
+              "$eq": "roundData"
+            }
+          }
+        }
+      }
+    }
+  }
+}

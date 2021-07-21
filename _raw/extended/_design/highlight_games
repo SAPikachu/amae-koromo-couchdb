@@ -1,0 +1,9 @@
+{
+  "_id": "_design/highlight_games",
+  "_rev": "4-9a6d56709e3b698fe7a133e1834e184c",
+  "views": {
+    "highlight_games": {
+      "map": "function (doc) {\n\t\"use strict\";\n  if (doc.type !== \"roundData\") {\n    return;\n  }\n\tvar 役满倍数 = {\n\t\t\"35\": 1,\n\t\t\"36\": 1,\n\t\t\"37\": 1,\n\t\t\"38\": 1,\n\t\t\"39\": 1,\n\t\t\"40\": 1,\n\t\t\"41\": 1,\n\t\t\"42\": 1,\n\t\t\"43\": 1,\n\t\t\"44\": 1,\n\t\t\"45\": 1,\n\t\t\"46\": 1,\n\t\t\"47\": 2,\n\t\t\"48\": 2,\n\t\t\"49\": 2,\n\t\t\"50\": 2\n\t};\n\tvar getFan = function(fans) {\n\t\tif (!役满倍数[fans[0]]) {\n\t\t\treturn { scoring: Math.min(fans.length, 13), actual: fans.length };\n\t\t}\n\t\tvar fan = 0;\n\t\tfans.forEach(function(x) {\n\t\t\tfan += (役满倍数[x] || 0) * 13;\n\t\t});\n\t\treturn { scoring: fan };\n\t};\n\tvar events = [];\n  doc.accounts.forEach(function(accountId, seat) {\n\t\tdoc.data.forEach(function(round, index) {\n\t\t\tvar player = round[seat];\n\t\t\tif (player.和) {\n\t\t\t\tvar fan = getFan(player.和[1]);\n\t\t\t\tif (fan.scoring >= 13) {\n\t\t\t\t\tevents.push({\n\t\t\t\t\t\ttype: \"役满\",\n\t\t\t\t\t\tfan: player.和[1],\n\t\t\t\t\t\tplayer: accountId,\n\t\t\t\t\t});\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\t});\n\tif (!events.length) {\n\t\treturn;\n\t}\n\tvar data = {\n\t\tmode_id: doc.mode_id,\n\t\tevents: events,\n\t};\n\temit([doc.mode_id, doc.start_time], data);\n}"
+    }
+  }
+}

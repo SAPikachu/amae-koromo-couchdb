@@ -1,0 +1,7 @@
+{
+  "_id": "_design/replicate_meta",
+  "_rev": "2-6eb5e2a1c986dc539b2e3ef6bc29b9b8",
+  "filters": {
+    "replicate_meta": "function(doc, req) {\n  return !doc.uuid && doc.type !== \"roundData\";\n}"
+  }
+}
