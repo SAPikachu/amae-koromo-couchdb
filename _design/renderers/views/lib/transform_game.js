@@ -7,13 +7,15 @@ module.exports = function (raw) {
 		endTime: raw.end_time,
 		players: raw.accounts.map(function (account) {
 			var level = raw.result.players.length > 3 ? account.level : account.level3;
+			var playerResult = raw.result.players.filter(function (x) {
+				return x.seat === account.seat;
+			})[0];
 			return {
 				accountId: account.account_id,
 				nickname: account.nickname,
 				level: level.id,
-				score: raw.result.players.filter(function (x) {
-					return x.seat === account.seat;
-				})[0].part_point_1
+				score: playerResult.part_point_1,
+				gradingScore: playerResult.grading_score
 			};
 		})
 	};
