@@ -9,6 +9,9 @@ function(keys, values, rereduce) {
   };
   var getMaxLevel = function(level) {
     var maxLevel = (result.max_level || level).slice(0);
+    if (maxLevel[0] % 10000 === 601) {
+      maxLevel = [maxLevel[0] + 100, Math.ceil((maxLevel[1] + maxLevel[2]) / 100) * 10 + 200, 0];
+    }
     if (maxLevel[0] !== level[0]) {
       maxLevel = (maxLevel[0] >= level[0]) ? maxLevel : level.slice(0);
     } else if (level[1] + Math.max(level[2], 0) > maxLevel[1] + Math.max(maxLevel[2], 0)) {
