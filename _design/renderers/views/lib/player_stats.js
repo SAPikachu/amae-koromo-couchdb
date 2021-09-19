@@ -5,6 +5,7 @@ exports.func = function(value) {
 	var result = {
 		count: sum(ranks),
 		level: value.level && convert_level(value.level),
+		ranking_level: value.ranking_level && convert_level(value.ranking_level),
 		max_level: value.max_level && convert_level(value.max_level),
 	};
 	if (result.level && Math.floor(result.level.id / 10000) === 2) {
