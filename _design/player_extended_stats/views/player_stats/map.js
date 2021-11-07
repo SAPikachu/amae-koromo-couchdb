@@ -136,6 +136,11 @@ function(doc) {
           inc("立听面数", player.立直听牌.length);
           inc("立听好型", player.立直听牌.length > 1 ? 1 : 0);
         }
+        if ("立直听牌残枚" in player) {
+          inc("立残分母", 1);
+          inc("立直听牌残枚", player.立直听牌残枚);
+          inc("立听好型2", player.立直听牌残枚 >= 6 ? 1 : 0);
+        }
         if (player.和) {
           inc("立直收入", player.和[0] / 100);
         } else if (player.放铳 || player.包牌) {
