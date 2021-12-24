@@ -42,6 +42,7 @@ exports.func = function func(value) {
 		被追率: value.被追立 / value.立直,
 		振听立直率: (value.振听立直 || 0) / value.立直,
 		立直好型: (value.立听好型 || 0) / value.立听分母,
+		立直好型2: (value.立听好型2 || 0) / value.立残分母,
 		役满: value.役满,
 		累计役满: value.累计役满,
 		最大累计番数: value.最大累计番数,
