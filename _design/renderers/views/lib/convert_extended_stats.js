@@ -49,6 +49,9 @@ exports.func = function func(value) {
 		最大累计番数: value.最大累计番数,
 		W立直: value.W立直,
 		流满: value.流满,
+		打点效率: Math.round((value.和 / value.count) * (value.和了点数 / value.和 * 100)),
+		铳点损失: Math.round((value.放铳 / value.count) * (value.放铳点数 / value.放铳 * 100)),
+		净打点效率: Math.round((value.和 / value.count) * (value.和了点数 / value.和 * 100) - (value.放铳 / value.count) * (value.放铳点数 / value.放铳 * 100)),
 		平均起手向听: value.起手向听 / value.count,
 		最近大铳: value.最近大铳 ? {
 			id: value.最近大铳[3],
