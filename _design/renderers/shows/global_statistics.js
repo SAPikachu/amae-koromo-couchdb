@@ -18,5 +18,5 @@ function(doc, req) {
 			};
 		});
 	});
-	return r.build_response(req, data, 3600);
+	return r.build_response(req, data, 86400);
 }
