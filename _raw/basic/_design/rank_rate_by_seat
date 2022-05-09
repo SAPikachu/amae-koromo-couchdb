@@ -1,7 +1,7 @@
 {
   "_id": "_design/rank_rate_by_seat",
-  "_rev": "4-fe2dd9132388e9ecfae370b001ec680b",
-  "views__backup": {
+  "_rev": "5-a26352ff6f3955bea13579ace5ea1165",
+  "views": {
     "rank_rate_by_seat": {
       "map": "function (doc) {\n  if (!doc.uuid) {\n    return;\n  }\n  var players = {};\n  doc.accounts.forEach(function (x) {\n\t\tplayers[x.seat] = { player: x, seat: x.seat };\n\t});\n  doc.result.players.forEach(function (x) {\n\t\tplayers[x.seat].result = x;\n\t});\n  var playerList = Object.keys(players).map(function(x) {\n\t\treturn players[x];\n\t});\n  playerList.sort(function(a, b) {\n\t\treturn b.result.total_point - a.result.total_point;\n\t});\n  playerList.forEach(function(x, index) {\n\t\temit([0, index + 1, x.seat], 1);\n\t\temit([doc.config.meta.mode_id, index + 1, x.seat], 1);\n\t});\n}",
       "reduce": "_count"
