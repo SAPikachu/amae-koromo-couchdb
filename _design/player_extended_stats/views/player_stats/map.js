@@ -183,6 +183,13 @@ function(doc) {
         }
       }
       inc("起手向听", player.起手向听);
+      if (player.亲) {
+        inc("起听亲", player.起手向听);
+        inc("亲数");
+      } else {
+        inc("起听子", player.起手向听);
+        inc("子数");
+      }
       inc("W立直", player.W立直 ? 1 : 0);
       inc("流满", player.流满 ? 1 : 0);
       inc("副露", player.副露 ? 1 : 0);
