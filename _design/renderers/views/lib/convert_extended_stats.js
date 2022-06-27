@@ -53,6 +53,8 @@ exports.func = function func(value) {
 		铳点损失: Math.round((value.放铳 / value.count) * (value.放铳点数 / value.放铳 * 100)),
 		净打点效率: Math.round((value.和 / value.count) * (value.和了点数 / value.和 * 100) - (value.放铳 / value.count) * (value.放铳点数 / value.放铳 * 100)),
 		平均起手向听: value.起手向听 / value.count,
+		平均起手向听亲: value.起听亲 / value.亲数,
+		平均起手向听子: value.起听子 / value.子数,
 		最近大铳: value.最近大铳 ? {
 			id: value.最近大铳[3],
 			start_time: value.最近大铳[4],
