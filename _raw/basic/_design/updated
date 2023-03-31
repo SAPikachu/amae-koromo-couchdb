@@ -1,0 +1,25 @@
+{
+  "_id": "_design/updated",
+  "_rev": "1-d8572b2962bb00099c87501d922a54ff",
+  "language": "query",
+  "views": {
+    "updated": {
+      "map": {
+        "fields": {
+          "updated": "asc"
+        },
+        "partial_filter_selector": {}
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            {
+              "updated": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
