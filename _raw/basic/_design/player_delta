@@ -1,7 +1,7 @@
 {
   "_id": "_design/player_delta",
-  "_rev": "1-cd0e019166d053e3fc18926f78067ae5",
-  "views": {
+  "_rev": "2-b6a8c24544e0ef8a5109bdb8a8925a82",
+  "views__backup": {
     "player_delta": {
       "map": "function (doc) {\n\t\"use strict\";\n\n  if (!doc.uuid) {\n    return;\n  }\n  var players = {};\n  doc.accounts.forEach(function (x) {\n\t\tplayers[x.seat] = { player: x };\n\t});\n  doc.result.players.forEach(function (x) {\n\t\tplayers[x.seat].result = x;\n\t});\n  var playerList = Object.keys(players).map(function(x) {\n\t\treturn players[x];\n\t});\n  playerList.forEach(function(x, index) {\n\t\tvar data = {\n\t\t\tmode: doc.config.meta.mode_id,\n\t\t\tdelta: x.result.grading_score\n\t\t};\n\t\temit([doc.start_time, x.player.account_id], data);\n\t});\n}"
     }
