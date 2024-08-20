@@ -4,9 +4,11 @@ function (doc) {
   }
   var players = {};
   doc.accounts.forEach(function (x) {
+		x.seat = x.seat || 0;
 		players[x.seat] = { player: x, seat: x.seat };
 	});
   doc.result.players.forEach(function (x) {
+		x.seat = x.seat || 0;
 		players[x.seat].result = x;
 	});
   var playerList = Object.keys(players).map(function(x) {

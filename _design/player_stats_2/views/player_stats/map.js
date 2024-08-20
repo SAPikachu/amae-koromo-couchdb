@@ -4,12 +4,12 @@ function(doc) {
   }
   var players = {};
   doc.accounts.forEach(function(x) {
-    players[x.seat] = {
+    players[(x.seat || 0)] = {
       player: x
     };
   });
   doc.result.players.forEach(function(x) {
-    players[x.seat].result = x;
+    players[(x.seat || 0)].result = x;
   });
   var playerList = Object.keys(players).map(function(x) {
     return players[x];
