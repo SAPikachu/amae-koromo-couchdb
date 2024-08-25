@@ -8,7 +8,7 @@ module.exports = function (raw) {
 		players: raw.accounts.map(function (account) {
 			var level = raw.result.players.length > 3 ? account.level : account.level3;
 			var playerResult = raw.result.players.filter(function (x) {
-				return (x.seat ?? 0) === (account.seat ?? 0);
+				return (x.seat || 0) === (account.seat || 0);
 			})[0];
 			return {
 				accountId: account.account_id,
