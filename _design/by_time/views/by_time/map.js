@@ -9,17 +9,13 @@ function (doc) {
 				return {
 					accountId: account.account_id,
 					nickname: account.nickname,
-					level: account[raw.accounts.length > 3 ? "level" : "level3"].id,
-					score: raw.result.players.filter(function (x) {
-						return (x.seat || 0) === (account.seat || 0);
-					})[0].part_point_1
+					level: account[raw.accounts.length > 3 ? "level" : "level3"].id
 				};
 			})
 		};
 	};
-
-	if (doc.uuid) {
+	if (doc.start_time) {
 		var date = new Date(doc.start_time * 1000);
-		emit([date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), doc.start_time], transform(doc));
+		emit([date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), doc.start_time], transform(doc)); 
 	}
 }
